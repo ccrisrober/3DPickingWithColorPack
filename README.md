@@ -1,13 +1,7 @@
-# GLFWTemplate
-Clone project with submodules:
-<pre>
-git clone --recursive https://github.com/maldicion069/GLFWTemplate.git
-cd GLFWTemplate
-</pre>
+# 3DPickingWithColorPack
+Pack integer value in fragment rgb fragColor for model picking.
 
-For already cloned repos, or older Git versions, just use:
-<pre>
-git clone https://github.com/maldicion069/GLFWTemplate.git
-cd GLFWTemplate
-git submodule update --init --recursive
-</pre>
+TODO:
+<ul>
+<li>Using glScissors</li>
+</ul>
