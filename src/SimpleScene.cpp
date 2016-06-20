@@ -3,7 +3,7 @@
 SimpleScene::SimpleScene(int w, int h) : IScene(w, h) { }
 SimpleScene::~SimpleScene() {
 }
-
+#define NUM 20
 void SimpleScene::initScene() {
 	compileAndLinkShaders();
 	glClearColor(0.5f,0.5f,0.5f,1.0f);
@@ -25,6 +25,8 @@ void SimpleScene::initScene() {
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+
+	std::cout << "TOTAL: " << pow((NUM + NUM), 3) << std::endl;
 }
 
 
@@ -32,7 +34,6 @@ void SimpleScene::update( float t ) {
 	angle += 0.1 * t;
 }
 
-#define NUM 15
 void SimpleScene::draw(Camera* camera) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -40,15 +41,18 @@ void SimpleScene::draw(Camera* camera) {
 	projection = camera->GetProjectionMatrix();
 
 	progPick.use();
+	glEnable(GL_SCISSOR_TEST);
+	glScissor(x, WINDOW_HEIGHT - y, 1, 1);
 	
 	int n = 0;
 	for (int i = -NUM; i < NUM; i++) {
 		for (int j = -NUM; j < NUM; j++) {
 			for (int k = -NUM; k < NUM; k++) {
 				vec4 kd = colors[n++ % colors.size()];
+				progPick.send_uniform("Kd", kd);
 				progPick.send_uniform("id", n);
 				model = glm::translate(mat4(1.0f), vec3(i * 2, j * 2, k * 2));
-				model = glm::rotate(model, glm::radians(-angle), glm::vec3(0, 1, 0));
+				//model = glm::rotate(model, glm::radians(-angle), glm::vec3(0, 1, 0));
 				model = glm::scale(model, glm::vec3(size));
 				progPick.send_uniform("selected", selected == n);
 				updateMatrices();
@@ -56,6 +60,7 @@ void SimpleScene::draw(Camera* camera) {
 			}
 		}
 	}
+	glDisable(GL_SCISSOR_TEST);
 	progPick.unuse();
 	/**/
 	if (pick) {
@@ -87,7 +92,7 @@ void SimpleScene::draw(Camera* camera) {
 				vec4 kd = colors[n++ % colors.size()];
 				prog.send_uniform("Kd", kd);
 				model = glm::translate(mat4(1.0f), vec3(i * 2, j * 2, k * 2));
-				model = glm::rotate(model, glm::radians(-angle), glm::vec3(0, 1, 0));
+				//model = glm::rotate(model, glm::radians(-angle), glm::vec3(0, 1, 0));
 				model = glm::scale(model, glm::vec3(size));
 				prog.send_uniform_b("selected", selected == n);
 				updateMatrices();
